@@ -3,18 +3,16 @@ world_dir = ./World
 build_dir = ./build
 objs = $(build_dir)/world/cheaptrick.o $(build_dir)/world/common.o $(build_dir)/world/d4c.o $(build_dir)/world/dio.o $(build_dir)/world/fft.o $(build_dir)/world/matlabfunctions.o $(build_dir)/world/stonemask.o $(build_dir)/world/synthesis.o $(build_dir)/world/synthesisrealtime.o $(build_dir)/world/harvest.o
 
-all : $(build_dir)/libworld.a $(build_dir)/estimate_f0
+all : $(build_dir)/estimate_f0
 
-$(build_dir)/estimate_f0 : estimate_f0.cpp include.h.gch 
-	g++ $(gcc_options) -include include.h -o $@ $<
+$(build_dir)/estimate_f0 : estimate_f0.cpp
+	mkdir -p $(build_dir)
+	g++ $(gcc_options) -I$(world_dir)/src -I$(world_dir)/tools -o $@ $^
 
-include.h.gch : include.h
-	g++ $(gcc_options) -x c++-header -o $@ $<
-
-# Build WORLD
 $(build_dir)/libworld.a : $(objs)
 	ar -rv $(build_dir)/libworld.a $(objs)
 
+# Build WORLD
 $(build_dir)/world/cheaptrick.o : $(world_dir)/src/world/cheaptrick.h $(world_dir)/src/world/common.h $(world_dir)/src/world/constantnumbers.h $(world_dir)/src/world/matlabfunctions.h $(world_dir)/src/world/macrodefinitions.h
 $(build_dir)/world/common.o : $(world_dir)/src/world/common.h $(world_dir)/src/world/constantnumbers.h $(world_dir)/src/world/matlabfunctions.h $(world_dir)/src/world/macrodefinitions.h
 $(build_dir)/world/d4c.o : $(world_dir)/src/world/d4c.h $(world_dir)/src/world/common.h $(world_dir)/src/world/constantnumbers.h $(world_dir)/src/world/matlabfunctions.h $(world_dir)/src/world/macrodefinitions.h
